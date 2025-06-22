@@ -3,10 +3,10 @@ from .models import Trainer
 
 
 class TrainerTranslationOptions(TranslationOptions):
-    fields = ("firstName", "lastName", "bio")
+    fields = ("first_name", "last_name", "bio")
     required_languages = {
-        "en": ("firstName", "lastName"),
-        "ar": ("firstName", "lastName"),
+        "en": ("first_name", "last_name", "bio"),
+        "ar": ("first_name", "last_name", "bio"),
     }
 
 

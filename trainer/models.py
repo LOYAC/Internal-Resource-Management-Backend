@@ -2,8 +2,6 @@ import os
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from resource_management_backend import settings
-
 
 # Validators
 def validate_image(file):
@@ -25,16 +23,16 @@ def validate_cv(file):
 
 
 def upload_trainer_image(instance, filename):
-    return f"trainers/images/{instance.id}_{instance.firstName}/{filename}"
+    return f"trainers/images/{instance.id}_{instance.first_name}/{filename}"
 
 
 def upload_trainer_cv(instance, filename):
-    return f"trainers/images/{instance.id}_{instance.firstName}/{filename}"
+    return f"trainers/images/{instance.id}_{instance.first_name}/{filename}"
 
 
 class Trainer(models.Model):
-    firstName = models.CharField(max_length=255, blank=False, null=False)
-    lastName = models.CharField(max_length=255, blank=False, null=False)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     dob = models.DateField(verbose_name="Date of Birth")
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20)
@@ -51,4 +49,26 @@ class Trainer(models.Model):
     comments = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.firstName} {self.lastName}"
+        return f"{self.first_name} {self.last_name}"
+
+    @property
+    def get_full_name(self):
+        # Filter out empty strings and None values from the name components
+        name_components = [part for part in [self.first_name, self.last_name] if part]
+
+        # Join the non-empty components with a space
+        return " ".join(name_components)
+
+    @property
+    def get_age(self, date):
+        date_of_birth = self.dob
+
+        if date_of_birth:
+            age = (
+                date.year
+                - date_of_birth.year
+                - ((date.month, date.day) < (date_of_birth.month, date_of_birth.day))
+            )
+            return age
+
+        return None
