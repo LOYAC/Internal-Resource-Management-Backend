@@ -23,11 +23,11 @@ def validate_cv(file):
 
 
 def upload_trainer_image(instance, filename):
-    return f"trainers/images/{instance.id}_{instance.first_name}/{filename}"
+    return f"trainers/images/{instance.get_full_name}/{filename}"
 
 
 def upload_trainer_cv(instance, filename):
-    return f"trainers/images/{instance.id}_{instance.first_name}/{filename}"
+    return f"trainers/images/{instance.get_full_name}/{filename}"
 
 
 class Trainer(models.Model):
